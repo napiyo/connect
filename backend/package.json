@@ -1,0 +1,28 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "Backend for connect app phonebook",
+    "main": "server.js",
+    "scripts": {
+        "test": "nodemon run server.js",
+        "start": "node run server.js"
+    },
+    "keywords": [
+        "connect",
+        "app",
+        "phone",
+        "book",
+        "contacts"
+    ],
+    "author": "Narendra Dewasi",
+    "license": "MIT",
+    "dependencies": {
+        "cookie-parser": "^1.4.6",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "jsonwebtoken": "^9.0.2",
+        "jwtoken": "^0.0.0",
+        "mongoose": "^7.4.5",
+        "nodemon": "^3.0.1"
+    }
+}
