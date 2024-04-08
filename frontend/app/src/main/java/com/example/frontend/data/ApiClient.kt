@@ -1,26 +1,24 @@
-package com.example.frontend.data
+package com.example.frontend.api
 
-import com.example.frontend.data.model.Contact
-import com.example.frontend.data.model.Contacts
+import com.example.frontend.api.model.Contact
+import com.example.frontend.api.model.Contacts
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiClient {
 
-    @GET("contacts/search-contacts/")
-    suspend fun searchContacts(
+    @GET("/api/contacts/search-contacts/")
+    suspend fun
+            searchContacts(
         @Query("name") name:String?,
         @Query("startsWith") startsWithString:String?,
         @Query("village") village:String?
-    ):Contacts
+    ):ApiResponse<List<Contact>>
 
     @GET("contacts/contact/{phoneNumber}")
     suspend fun getContact(
         @Path("phoneNumber") phoneNumber:String
-    ):Contact
+    ):ApiResponse<*>
 
-    companion object {
-        const val BASE_URL = "http://localhost:3000/api/"
-    }
 }

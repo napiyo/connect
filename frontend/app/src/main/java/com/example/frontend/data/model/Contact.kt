@@ -1,4 +1,4 @@
-package com.example.frontend.data.model
+package com.example.frontend.api.model
 
 data class   Contact(
     val __v: Int,
