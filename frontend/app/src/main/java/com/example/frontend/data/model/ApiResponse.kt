@@ -1,4 +1,4 @@
-package com.example.frontend.api
+package com.example.frontend.data.model
 
 data class ApiResponse<T>(
     val success: Boolean=false,

@@ -4,7 +4,7 @@ const {addContact,getContact,updateContact, searchContact} = require('../control
 
 
 // contactRouter.get('/get-all-contacts', getAllContacts);
-contactRouter.get('/contact/:phoneNumber', getContact);
+contactRouter.get('/contact', getContact);
 contactRouter.post('/contact',addContact);
 contactRouter.put('/contact',updateContact);
 contactRouter.get('/search-contacts', searchContact);

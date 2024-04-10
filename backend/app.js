@@ -5,11 +5,11 @@ const mongoose = require('mongoose');
 const verificationModel = require('./models/verficationModel.js');
 const ContactModel = require('./models/contactsModel.js');
 const ConfigModel = require('./models/configModel.js');
-
+const cors = require('cors')
 require('dotenv').config({ path: './config/.env' });
 const cookieParser = require('cookie-parser')
 const app = express();
-
+app.use(cors())
 mongoose.connect(process.env.MONGODB_URI, {
         useNewUrlParser: true,
         serverSelectionTimeoutMS: 5000

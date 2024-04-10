@@ -1,4 +1,4 @@
-package com.example.frontend.api.model
+package com.example.frontend.data.model
 
 data class   Contact(
     val __v: Int,
@@ -6,7 +6,7 @@ data class   Contact(
     val appUser: Boolean,
     val fatherName: String,
     val name: String,
-    val phoneNumber: Long,
+    val phoneNumber: String,
     val proMember: Boolean,
     val vans: String,
     val village: String

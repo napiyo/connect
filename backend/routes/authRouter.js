@@ -1,11 +1,10 @@
-const { phoneVerification, verfiyOTP, loggin, logout } = require("../controllers/authController");
-const { isAuthenticated } = require("../utils/roles");
+const { phoneVerification, verifyOTP, login, logout } = require("../controllers/authController");
 
 const authRouter = require("express").Router();
 
 authRouter.post('/send-otp',phoneVerification);
-authRouter.post('/verify-otp',verfiyOTP);
-authRouter.post('/loggin',loggin);
+authRouter.post('/verify-otp',verifyOTP);
+authRouter.post('/login',login);
 authRouter.post('/logout',logout);
 
 

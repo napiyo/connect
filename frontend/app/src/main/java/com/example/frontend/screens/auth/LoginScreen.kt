@@ -1,4 +1,4 @@
-package com.example.frontend.screens
+package com.example.frontend.screens.auth
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -33,43 +33,46 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.frontend.R
 import com.example.frontend.utils.Screens
 import com.example.frontend.appComponent.FloatingActionButtonAppComponent
 import com.example.frontend.appComponent.HeadingAppComponent
-import com.example.frontend.appComponent.OverlayLoadingScreen
-import com.example.frontend.data.model.ContactBody
 import com.example.frontend.data.model.phoneNumberClass
 import com.example.frontend.data.repoImpl.AuthRepoImpl
 import com.example.frontend.data.repoImpl.ContactsRepoImpl
 import com.example.frontend.presentation.AuthViewModel
 import com.example.frontend.presentation.ContactViewModel
+import com.example.frontend.ui.theme.PoppinsFont
 
 
 @Composable
 fun LoginScreen(navController: NavController) {
+// ********** models *********
     val authViewModel: AuthViewModel = remember { AuthViewModel(AuthRepoImpl()) }
     val sendOtpState by authViewModel.sendOtpState.collectAsState()
-    val contactViewModel: ContactViewModel = remember { ContactViewModel(ContactsRepoImpl()) }
-    val addContactState by contactViewModel.addContactState.collectAsState()
     val isLoading by authViewModel.isLoading.collectAsState()
+// ****** locals ********
     var phoneNumberTF by remember {
         mutableStateOf("")
+    }
+    if (sendOtpState.success) {
+        navController.navigate(Screens.OTPScreen.route + "/${phoneNumberTF}")
+    } else {
+        Log.e("narendar", "[in UI22]"+sendOtpState.toString())
     }
     Scaffold(
         modifier = Modifier
             .padding(10.dp)
             .background(colorResource(id = R.color.appBackground)),
         floatingActionButton = {
-            FloatingActionButtonAppComponent(Icons.Filled.ArrowForward,"Next"){
+            FloatingActionButtonAppComponent(Icons.Filled.ArrowForward,"Next",isLoading){
 
                 authViewModel.sendOtp(phoneNumberClass( phoneNumberTF))
-                if(sendOtpState.success)
-                {
-                    navController.navigate(Screens.OTPScreen.route)
-                }
+                Log.e("narendar", "[in UI]"+sendOtpState.toString())
+
             }
         },
 
@@ -95,14 +98,14 @@ fun LoginScreen(navController: NavController) {
                     label = { Text(text = "Phone Number")},
                     singleLine = true,
                     keyboardOptions = KeyboardOptions( keyboardType = KeyboardType.Phone),
-                    textStyle = TextStyle(fontSize = 20.sp),
+                    textStyle = TextStyle(fontSize = 20.sp, fontFamily = PoppinsFont),
                     modifier = Modifier
                         .width(350.dp)
                         .statusBarsPadding()
                         .navigationBarsPadding()
                         .imePadding(),
                     leadingIcon = { Icon(imageVector = Icons.Filled.Phone, contentDescription = "")},
-
+                    enabled = !isLoading
                 )
             }
         }

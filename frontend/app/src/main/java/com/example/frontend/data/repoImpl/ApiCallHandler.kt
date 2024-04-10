@@ -1,4 +1,4 @@
-package com.example.frontend.data.repo
+package com.example.frontend.data.repoImpl
 
 import com.example.frontend.data.model.ApiResponse
 import com.google.gson.Gson

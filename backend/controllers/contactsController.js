@@ -32,7 +32,7 @@ exports.addContact = asyncerror(async(req, res, next) => {
 // })
 
 exports.getContact = asyncerror(async(req, res, next) => {
-    const {phoneNumber} = req.params;
+    const {phoneNumber} = req.body;
     if(!phoneNumber)
     {
         return next(new ErrorHandler("Phone number is required",400))
@@ -80,18 +80,15 @@ exports.getContact = asyncerror(async(req, res, next) => {
 
 exports.searchContact = asyncerror(async(req, res, next) => {
     const {name,village,page=0,startsWith,reverse} = req.query;
-    if (!(name || village || startsWith)) {
-        return next(new ErrorHandler("query is required", 400));
-    }
     let query = {};
-    if(name){
+    if(name && name.length != 0){
         query.name =  { $regex: name, $options: 'i' };
     }
 
-    if (village) {
+    if (village && village.length != 0) {
         query.village = village;
     }
-    if (startsWith) {
+    if (startsWith && startsWith.length != 0) {
         query.name = { $regex: `^${startsWith}`, $options: 'i' }; // Find names starting with specified letter
     }
     // first page is page 0.

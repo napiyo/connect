@@ -1,5 +1,6 @@
-package com.example.frontend.screens
+package com.example.frontend.screens.auth
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,18 +36,37 @@ import androidx.navigation.compose.rememberNavController
 import com.example.frontend.R
 import com.example.frontend.appComponent.FloatingActionButtonAppComponent
 import com.example.frontend.appComponent.HeadingAppComponent
+import com.example.frontend.data.model.SendOtpBody
+import com.example.frontend.data.repoImpl.AuthRepoImpl
+import com.example.frontend.presentation.AuthViewModel
+import com.example.frontend.ui.theme.PoppinsFont
 
 
 @Composable
-fun OTPScreen(navController: NavController)
+fun OTPScreen(navController: NavController,phoneNumberProp:String="")
 {
+// ******* models ********
+    val authViewModel: AuthViewModel = remember { AuthViewModel(AuthRepoImpl()) }
+    val verifyOtpState by authViewModel.verifyOtpState.collectAsState()
+    val isLoading by authViewModel.isLoading.collectAsState()
+
+// ******* locals ********
+    var otpCode by remember {
+        mutableStateOf("")
+    }
+
     Scaffold(
         modifier = Modifier
             .padding(10.dp)
             .fillMaxSize(),
         floatingActionButton = {
-            FloatingActionButtonAppComponent(Icons.Filled.ArrowForward,"Next"){
+            FloatingActionButtonAppComponent(Icons.Filled.ArrowForward,"Next",isLoading){
                 // next Action
+                authViewModel.verifyOtp(SendOtpBody(phoneNumberProp,otpCode))
+                if(!isLoading)
+                {
+                    Log.e("narendar",verifyOtpState.toString())
+                }
             }
         },
         )
@@ -57,9 +78,7 @@ fun OTPScreen(navController: NavController)
             .fillMaxSize()) {
             HeadingAppComponent(heading = "Please Enter OTP")
             Spacer(modifier = Modifier.height(20.dp))
-            var otpCode by remember {
-                mutableStateOf("")
-            }
+
             BasicTextField(value = otpCode , onValueChange = {otpCode = it.take(6)},
                 modifier = Modifier.fillMaxSize(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
@@ -77,6 +96,7 @@ fun OTPScreen(navController: NavController)
                         Text(
                             text = number.toString(),
                             fontSize = 30.sp,
+                            fontFamily = PoppinsFont,
                             modifier = Modifier
                                 .width(50.dp).height(50.dp)
                                 .border(width = 1.dp,color= colorResource(id = R.color.OTPborder), shape = RoundedCornerShape(7.dp))

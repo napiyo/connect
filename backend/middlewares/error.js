@@ -9,6 +9,7 @@ module.exports = (err,req,res,next) =>{
         console.log("[MongooseErr]",err.message);
         err.message = "OPPS.. Server down, try after some time"
     }
+    console.log("failed server",req.body,err);
     res.status(err.statusCode).json({
         success:false,
         data:err.message,

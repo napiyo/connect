@@ -1,6 +1,6 @@
 package com.example.frontend.data.model
 
-data class serverConfig(
+data class ServerConfig(
     val _id: String,
     val latestAppVer: Int,
     val mode: String,

@@ -65,7 +65,7 @@ exports.phoneVerification = asyncerror(async(req, res, next) => {
 });
 
 
-exports.verfiyOTP = asyncerror(async(req, res, next) => {
+exports.verifyOTP = asyncerror(async(req, res, next) => {
     const { phoneNumber, userOTP } = req.body;
     if (!(phoneNumber && userOTP)) {
         return next(new ErrorHandler("phoneNumber and userOTP is required", 400));
@@ -89,7 +89,7 @@ exports.verfiyOTP = asyncerror(async(req, res, next) => {
 });
 
 
-exports.loggin = asyncerror(async(req, res, next) => {
+exports.login = asyncerror(async(req, res, next) => {
     const { phoneNumber, name, fatherName, vans, village } = req.body;
     if (!(phoneNumber && name && fatherName && vans && village)) {
         return next(new ErrorHandler("All feilds are required", 400));
