@@ -32,7 +32,7 @@ val bottomNavItems = listOf(
         icon = R.drawable.icon_contact
     ),
     BottomNavItem(
-        name = "Ads",
+        name = "Events",
         route = Screens.AdsScreen.route,
         icon = R.drawable.icons_events,
     ),

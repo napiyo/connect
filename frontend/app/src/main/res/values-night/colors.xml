@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="textSimple">#2196F3</color>
-    <color name="outlineColor">#FF000000</color>
     <color name="floatingButtonBackground">#2196F3</color>
     <color name="floatingButtonIcon">#FF000000</color>
     <color name="appBackground">#3C3B3B</color>

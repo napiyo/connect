@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { allowedVillages } = require('../controllers/contactsController');
 
 
 const contactSchema = new mongoose.Schema({
@@ -17,6 +18,7 @@ const contactSchema = new mongoose.Schema({
     village:{
         type: String,
         required:  [true, 'Village is required.'],
+        enum: allowedVillages
     },
     phoneNumber: {
         type: Number,

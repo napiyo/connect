@@ -2,7 +2,10 @@ package com.example.frontend.appComponent
 
 
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,11 +14,13 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 
 import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -128,4 +133,18 @@ fun NavigationBarBottom(navViewModel: NavViewModel) {
 @Composable
 fun NavigationPreview() {
     NavigationBarBottom(navViewModel = NavViewModel())
+}
+@Composable
+fun Header(iconId:Int,text:String){
+    Row (horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(10.dp)){
+        Icon(painter = painterResource(id = iconId), contentDescription = "", tint = Color.Unspecified,
+            modifier = Modifier.size(30.dp))
+        Spacer(modifier = Modifier.width(5.dp))
+        Text(text=text,
+            fontFamily = PoppinsFont, fontWeight = FontWeight.Medium, fontSize = 25.sp
+        )
+    }
+    HorizontalDivider()
+    Spacer(modifier = Modifier.height(5.dp))
 }

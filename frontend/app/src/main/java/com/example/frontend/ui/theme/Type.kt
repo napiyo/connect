@@ -11,7 +11,12 @@ import com.example.frontend.R
 val PoppinsFont = FontFamily(
     Font(R.font.poppins,FontWeight.Normal),
     Font(R.font.poppins_bold,FontWeight.Bold),
-    Font(R.font.poppins_semibold,FontWeight.Medium)
+    Font(R.font.poppins_semibold,FontWeight.Medium),
+    Font(R.font.satisfy,FontWeight.Normal),
+)
+
+val SatisfyFont = FontFamily(
+    Font(R.font.satisfy,FontWeight.Normal)
 )
 // Set of Material typography styles to start with
 val Typography = Typography(

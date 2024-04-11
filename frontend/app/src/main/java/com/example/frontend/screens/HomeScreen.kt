@@ -3,6 +3,7 @@ package com.example.frontend.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,10 +16,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.frontend.R
+import com.example.frontend.appComponent.Header
 import com.example.frontend.appComponent.HeadingAppComponent
 import com.example.frontend.ui.theme.PoppinsFont
 import com.example.frontend.ui.theme.Purple40
@@ -50,16 +57,7 @@ fun HomeScreen() {
     {
         if(it.toString() == ""){}
         Column {
-            Row (horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(10.dp)){
-                Icon(painter = painterResource(id = R.drawable.icons_shop), contentDescription = "", tint = Color.Unspecified,
-                    modifier = Modifier.size(30.dp))
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(text="Shops",
-                    fontFamily = PoppinsFont, fontWeight = FontWeight.Medium, fontSize = 25.sp
-                )
-            }
-            HorizontalDivider()
+            Header(iconId = R.drawable.icons_shop, text = "Shops")
             LazyColumn(Modifier.padding(horizontal = 10.dp, vertical = 10.dp)) {
                 itemsIndexed(list) { index, item ->
                     ShopItem()
@@ -166,4 +164,10 @@ fun ShopItem() {
             )
         }
     }
+}
+@Preview
+@Composable
+fun ShopItemPreview()
+{
+    ShopItem()
 }

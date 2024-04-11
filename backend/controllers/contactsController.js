@@ -2,6 +2,7 @@ const contactModel = require("../models/contactsModel");
 const asyncerror = require("../middlewares/catchAsyncError");
 const ErrorHandler = require("../utils/errorHandler")
 
+exports.allowedVillages = ["kailash","amli","sanchore"]
 exports.addContact = asyncerror(async(req, res, next) => {
     const { name, fatherName, vans, village, phoneNumber } = req.body;
     if (!(name && fatherName && vans && village && phoneNumber)) {
@@ -15,6 +16,7 @@ exports.addContact = asyncerror(async(req, res, next) => {
             });
         })
 })
+
 
 // exports.getAllContacts = asyncerror(async(req, res,next) => {
 

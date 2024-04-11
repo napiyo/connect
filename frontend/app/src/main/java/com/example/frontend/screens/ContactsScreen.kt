@@ -83,6 +83,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.frontend.R
+import com.example.frontend.appComponent.Header
 import com.example.frontend.appComponent.HeadingAppComponent
 import com.example.frontend.data.model.Contact
 import com.example.frontend.data.repoImpl.AuthRepoImpl
@@ -147,7 +148,7 @@ fun ContactsScreen(contactViewModel: ContactViewModel) {
         Column(modifier = Modifier
             .fillMaxHeight()
             .padding(5.dp)) {
-            Header()
+            Header(R.drawable.icon_contact,"Contacts")
             TextField(
                 value = searchQueryTF, onValueChange = { it-> searchQueryTF = it },
                 placeholder = { Text(text = "Search Contacts") },
@@ -273,20 +274,7 @@ fun ContactScreenPreview() {
     ContactsScreen(ContactViewModel(ContactsRepoImpl()))
 }
 
-@Composable
-fun Header(){
-    Row (horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(10.dp)){
-        Icon(painter = painterResource(id = R.drawable.icon_contact), contentDescription = "", tint = Color.Unspecified,
-            modifier = Modifier.size(30.dp))
-        Spacer(modifier = Modifier.width(5.dp))
-        Text(text="Contacts",
-            fontFamily = PoppinsFont, fontWeight = FontWeight.Medium, fontSize = 25.sp
-        )
-    }
-    HorizontalDivider()
-    Spacer(modifier = Modifier.height(5.dp))
-}
+
 @Composable
 fun ShimmerLoadingItem() {
     val transition = rememberInfiniteTransition(label = "")
