@@ -10,7 +10,7 @@ class ShopRepoImpl:ShopRepo {
     override suspend fun getshops(village: String?, page: String): Flow<ApiResponse<*>> {
         return flow {
             val res = ApiCallHandler.handleApiCall {
-                retrofitInstance.api.getEvent(
+                retrofitInstance.api.getShops(
                     village,
                     page
                 )

@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontend.data.model.ApiResponse
-import com.example.frontend.data.model.Contact
-import com.example.frontend.data.model.EventClass
 import com.example.frontend.data.model.Shop
 import com.example.frontend.data.repo.ShopRepo
 import com.example.frontend.utils.configs

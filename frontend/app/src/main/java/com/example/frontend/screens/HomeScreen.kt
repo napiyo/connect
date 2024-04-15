@@ -161,6 +161,7 @@ fun HomeScreenPreview() {
 @Composable
 fun ShopItem(navViewModal: NavViewModel,item:Shop) {
     if(item.shopName == "") return
+    Log.e("narendra",item.toString())
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { }

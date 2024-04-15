@@ -5,9 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.frontend.data.model.ApiResponse
 import com.example.frontend.data.model.Contact
 import com.example.frontend.data.model.EventClass
-import com.example.frontend.data.model.Shop
 import com.example.frontend.data.repo.EventRepo
-import com.example.frontend.data.repo.ShopRepo
 import com.example.frontend.utils.configs
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,11 +36,11 @@ class EventViewModel(private val eventRepo: EventRepo) : ViewModel() {
             eventRepo.getEvent(_village, currentPage.toString()).collect {
 
                 if (it.success) {
-                    val tempShops: List<EventClass> = it.data as List<EventClass>
-                    if (tempShops.isNotEmpty()) {
-                        _events.value += tempShops
+                    val tempEvent: List<EventClass> = it.data as List<EventClass>
+                    if (tempEvent.isNotEmpty()) {
+                        _events.value += tempEvent
                     }
-                    if (tempShops.size == configs.SEARCH_RESULTS_PER_PAGE) {
+                    if (tempEvent.size == configs.SEARCH_RESULTS_PER_PAGE) {
                         currentPage += 1;
                     } else {
                         currentPage = -1
