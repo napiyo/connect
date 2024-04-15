@@ -3,8 +3,10 @@ package com.example.frontend.data
 import com.example.frontend.data.model.ApiResponse
 import com.example.frontend.data.model.Contact
 import com.example.frontend.data.model.ContactBody
+import com.example.frontend.data.model.EventClass
 import com.example.frontend.data.model.SendOtpBody
 import com.example.frontend.data.model.ServerConfig
+import com.example.frontend.data.model.Shop
 import com.example.frontend.data.model.phoneNumberClass
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -65,4 +67,19 @@ interface ApiClient {
     @GET("configs/getConfig")
     suspend fun getServerConfig()
     : ApiResponse<ServerConfig>
+
+//  ******************  shops APIs  ***********************
+    @GET("shops/shop")
+    suspend fun getShops(
+        @Query("village") village:String?,
+        @Query("page") page:String?,
+    )
+            : ApiResponse<List<Shop>>
+//  ******************  shops APIs  ***********************
+    @GET("events/events")
+    suspend fun getEvent(
+        @Query("village") village:String?,
+        @Query("page") page:String?,
+    )
+            : ApiResponse<List<EventClass>>
 }

@@ -13,22 +13,23 @@ import com.example.frontend.data.model.ContactBody
 import com.example.frontend.data.model.phoneNumberClass
 import com.example.frontend.data.repo.ContactsRepo
 import com.example.frontend.utils.configs
+import com.example.frontend.utils.configs.MAX_RETRY
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ContactViewModel(private val contactsRepo: ContactsRepo): ViewModel() {
-    private val _searchContactsState = MutableStateFlow<ApiResponse<*>>(ApiResponse(data = "initial"))
+    private val _searchContactsState = MutableStateFlow<ApiResponse<*>>(ApiResponse(data = ""))
     val searchContactsState: StateFlow<ApiResponse<*>> = _searchContactsState
 
-    private val _getContactState = MutableStateFlow<ApiResponse<*>>(ApiResponse(data = "initial"))
+    private val _getContactState = MutableStateFlow<ApiResponse<*>>(ApiResponse(data = ""))
     val getContactState: StateFlow<ApiResponse<*>> = _getContactState
 
-    private val _addContactState = MutableStateFlow<ApiResponse<*>>(ApiResponse(data = "initial"))
+    private val _addContactState = MutableStateFlow<ApiResponse<*>>(ApiResponse(data = ""))
     val addContactState: StateFlow<ApiResponse<*>> = _addContactState
 
-    private val _updateContactState = MutableStateFlow<ApiResponse<*>>(ApiResponse(data = "initial"))
+    private val _updateContactState = MutableStateFlow<ApiResponse<*>>(ApiResponse(data = ""))
     val updateContactState: StateFlow<ApiResponse<*>> = _updateContactState
 
     private val _isLoading = MutableStateFlow<Boolean>(false)
@@ -39,12 +40,16 @@ class ContactViewModel(private val contactsRepo: ContactsRepo): ViewModel() {
 
     private var currentPage: Int = 0
 
+    private val _retryCount = MutableStateFlow<Int>(0)
+    val retryCount: StateFlow<Int> = _retryCount
+
     // Functions to make API calls and update StateFlows
-    fun searchContacts(name: String? = null, startsWith: String? = null, village: String? = null,page:String="0") {
+    fun searchContacts(name: String? = null, startsWith: String? = null, village: String? = null) {
+        if(currentPage < 0) return
+        _isLoading.value = true
         viewModelScope.launch {
-            if(currentPage < 0) return@launch
-            _isLoading.value = true
-            contactsRepo.searchContacts(name, startsWith, village,currentPage.toString()).collect {
+            var _village = if(village?.lowercase()=="all"){null}else{village}
+            contactsRepo.searchContacts(name, startsWith, _village,currentPage.toString()).collect {
 
                 if(it.success) {
                     val tempContacts: List<Contact> = it.data as List<Contact>
@@ -59,6 +64,12 @@ class ContactViewModel(private val contactsRepo: ContactsRepo): ViewModel() {
                     else{
                         currentPage = -1
                     }
+                }
+                else if (_retryCount.value == MAX_RETRY){
+                    currentPage = -1
+                }
+                else{
+                    _retryCount.value+=1
                 }
                 _searchContactsState.value = it
             }
@@ -96,11 +107,14 @@ class ContactViewModel(private val contactsRepo: ContactsRepo): ViewModel() {
             _isLoading.value = false
         }
     }
+    private var temp = 0;
     fun clearContacts()
     {
         _isLoading.value = true
         currentPage = 0;
-        _contacts.value = listOf(Contact(0,"",false,"","","",false,"",""))
+        _retryCount.value = 0
+        _contacts.value = listOf(Contact(temp,"",false,"","","",false,"",""))
         _isLoading.value = false
+        temp+=1;
     }
 }
