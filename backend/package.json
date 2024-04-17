@@ -5,7 +5,7 @@
     "main": "server.js",
     "scripts": {
         "test": "nodemon run server.js",
-        "start": "node run server.js"
+        "start": "node server.js"
     },
     "keywords": [
         "connect",
