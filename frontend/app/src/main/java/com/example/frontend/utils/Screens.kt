@@ -6,6 +6,7 @@ sealed class Screens(val route: String) {
     data object MainScreen : Screens("main_screen")
     data object LoginScreen : Screens("login_screen")
     data object OTPScreen : Screens("otp_screen")
+    data object ProfileLoginScreen : Screens("profile_login_screen")
     data object HomeScreen : Screens("home_screen"){
         val text = "Shops"
         val icon = R.drawable.icons_shop

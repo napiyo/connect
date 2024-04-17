@@ -12,13 +12,18 @@ import java.util.LinkedList
 import java.util.Locale
 import java.util.Queue
 
-class NavViewModel:ViewModel() {
+class NavViewModel(needAll:Boolean=true):ViewModel() {
     private val _currentDestination = MutableStateFlow<String>("home_screen")
     val currentDestination: StateFlow<String> = _currentDestination
     private val _village = MutableStateFlow<String>("all")
     val village: StateFlow<String> = _village
-    private val _villagelist = MutableStateFlow<List<String>>(listOf("all","amli","sanchore"))
+    private val _villagelist = MutableStateFlow<List<String>>(
+        listOf("all")
+    )
+
     val villageList: StateFlow<List<String>> = _villagelist
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean > = _isLoading
     fun setCurrentDestination(destination: String) {
         _currentDestination.value = destination
     }
@@ -26,8 +31,8 @@ class NavViewModel:ViewModel() {
     {
         _village.value = villageSelected.lowercase()
     }
-    fun fetchVillages(){
-//        _villagelist.value =
+    fun setVillagesList(villages:List<String>){
+        _villagelist.value = villages
     }
     private val _snackbarQueue = MutableStateFlow<List<String>>(emptyList())
     val snackbarQueue: StateFlow<List<String>> = _snackbarQueue

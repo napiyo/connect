@@ -2,6 +2,7 @@ package com.example.frontend.screens
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.LinearEasing
@@ -37,6 +38,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +48,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -70,6 +75,8 @@ import com.example.frontend.ui.theme.ribbenIconBGColor
 import com.example.frontend.ui.theme.shopContainerColor
 import com.example.frontend.ui.theme.weedingContainerColor
 import com.example.frontend.utils.configs
+import com.example.frontend.utils.getToken
+import com.example.frontend.utils.saveToken
 
 @Composable
 fun AdsScreen(navViewModal:NavViewModel, eventViewModel: EventViewModel) {
@@ -78,7 +85,7 @@ fun AdsScreen(navViewModal:NavViewModel, eventViewModel: EventViewModel) {
     val isLoading by eventViewModel.isLoading.collectAsState()
     val retryCount by eventViewModel.retryCount.collectAsState()
     val villageSelected by navViewModal.village.collectAsState()
-
+    val prevVillage by eventViewModel.prevVillage.collectAsState()
     LaunchedEffect(eventState)
     {
         if(!eventState.success && eventState.data.toString().isNotBlank())
@@ -93,18 +100,21 @@ fun AdsScreen(navViewModal:NavViewModel, eventViewModel: EventViewModel) {
             navViewModal.enqueueSnackbar("we couldn't fetch events, please retry")
         }
     }
-
     LaunchedEffect(villageSelected)
     {
-        eventViewModel.clearEvents()
+
+        if(prevVillage.lowercase() != villageSelected.lowercase()){
+            eventViewModel.clearEvents()
+        }
     }
+    val context = LocalContext.current
+
     Scaffold ()
     {
         if(it.toString() == "") {}
         Column {
                 HeaderWithDropDown(iconId = R.drawable.icons_events, text ="Events", navViewModal  )
                 HorizontalDivider()
-
             LazyColumn{
                 itemsIndexed(events){index,item ->
                     if(isLoading)
@@ -123,7 +133,7 @@ fun AdsScreen(navViewModal:NavViewModel, eventViewModel: EventViewModel) {
                     if( !isLoading &&  events.lastIndex == index){
                     if(retryCount >= configs.MAX_RETRY)
                     {
-                        Text(text = "failed to get more contact", maxLines = 1, modifier = Modifier.padding(5.dp))
+                        Text(text = "failed to get more events", maxLines = 1, modifier = Modifier.padding(5.dp))
                     }
                     else{
                         eventViewModel.getEvents(village = villageSelected)

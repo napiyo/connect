@@ -2,7 +2,7 @@ const verificationModel = require("../models/verficationModel");
 const ErrorHandler = require("../utils/errorHandler");
 const asyncerror = require("../middlewares/catchAsyncError");
 const sendOTP = require("../middlewares/otp");
-const { updatePhoneNumber } = require("./contactsController");
+const { updateContact } = require("./contactsController");
 const sendToken = require("../utils/jswtoken");
 const jwt = require('jsonwebtoken')
 
@@ -75,7 +75,7 @@ exports.verifyOTP = asyncerror(async(req, res, next) => {
             const currentDate = new Date();
             // OTP valid till 10 min
             if (currentDate - contact.updatedAt > 10 * 60 * 1000) {
-                return next(new ErrorHandler("OTP is expired, please try sending new OTP"));
+                return next(new ErrorHandler("OTP is expired, please try sending new OTP",403));
             }
             if (contact.otp != userOTP) {
                 return next(new ErrorHandler("Invalid OTP", 403));
@@ -106,7 +106,7 @@ exports.login = asyncerror(async(req, res, next) => {
         return next(new ErrorHandler("Tamppered  Cookie", 401));
     }
     // update contact details
-    updatePhoneNumber(req, res, next);
+    updateContact(req, res, next);
 });
 
 exports.logout = asyncerror(async(req, res, next) => {

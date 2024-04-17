@@ -17,10 +17,10 @@ import kotlinx.coroutines.launch
 class AuthViewModel(private val authRepo: AuthRepo) : ViewModel() {
 
     // Define StateFlows for each API call
-    private val _sendOtpState = MutableStateFlow<ApiResponse<String>>(ApiResponse())
+    private val _sendOtpState = MutableStateFlow<ApiResponse<String>>(ApiResponse(data=""))
     val sendOtpState: StateFlow<ApiResponse<String>> = _sendOtpState
 
-    private val _verifyOtpState = MutableStateFlow<ApiResponse<String>>(ApiResponse())
+    private val _verifyOtpState = MutableStateFlow<ApiResponse<String>>(ApiResponse(data=""))
     val verifyOtpState: StateFlow<ApiResponse<String>> = _verifyOtpState
 
     private val _loginApiState = MutableStateFlow<ApiResponse<*>>(ApiResponse<Contact>())

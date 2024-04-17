@@ -43,8 +43,11 @@ class ContactViewModel(private val contactsRepo: ContactsRepo): ViewModel() {
     private val _retryCount = MutableStateFlow<Int>(0)
     val retryCount: StateFlow<Int> = _retryCount
 
+    private val _prevVillage = MutableStateFlow<String>("all")
+    val prevVillage: StateFlow<String> = _prevVillage
+
     // Functions to make API calls and update StateFlows
-    fun searchContacts(name: String? = null, startsWith: String? = null, village: String? = null) {
+    fun searchContacts(name: String? = null, startsWith: String? = null, village: String) {
         if(currentPage < 0) return
         _isLoading.value = true
         viewModelScope.launch {
@@ -55,7 +58,7 @@ class ContactViewModel(private val contactsRepo: ContactsRepo): ViewModel() {
                     val tempContacts: List<Contact> = it.data as List<Contact>
                     if(tempContacts.isNotEmpty())
                     {
-                        _contacts.value += tempContacts
+                        _contacts.value = (_contacts.value + tempContacts).toSet().toList()
                     }
                     if(tempContacts.size == configs.SEARCH_RESULTS_PER_PAGE)
                     {
@@ -73,15 +76,15 @@ class ContactViewModel(private val contactsRepo: ContactsRepo): ViewModel() {
                 }
                 _searchContactsState.value = it
             }
-
+            _prevVillage.value = village
             _isLoading.value = false
         }
     }
 
-    fun getContact(body: phoneNumberClass) {
+    fun getContact(phoneNumber:String) {
         viewModelScope.launch {
             _isLoading.value = true
-            contactsRepo.getContact(body).collect {
+            contactsRepo.getContact(phoneNumber).collect {
                 _getContactState.value = it
             }
             _isLoading.value = false

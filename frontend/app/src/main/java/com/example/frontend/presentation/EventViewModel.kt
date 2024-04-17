@@ -23,8 +23,9 @@ class EventViewModel(private val eventRepo: EventRepo) : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading
     private val _retryCount = MutableStateFlow<Int>(0)
     val retryCount: StateFlow<Int> = _retryCount
-
-    fun getEvents(village: String? = null) {
+    private val _prevVillage = MutableStateFlow<String>("all")
+    val prevVillage: StateFlow<String> = _prevVillage
+    fun getEvents(village: String) {
         if (currentPage < 0) return
         _isLoading.value = true
         viewModelScope.launch {
@@ -38,7 +39,7 @@ class EventViewModel(private val eventRepo: EventRepo) : ViewModel() {
                 if (it.success) {
                     val tempEvent: List<EventClass> = it.data as List<EventClass>
                     if (tempEvent.isNotEmpty()) {
-                        _events.value += tempEvent
+                        _events.value = (_events.value+ tempEvent).toSet().toList()
                     }
                     if (tempEvent.size == configs.SEARCH_RESULTS_PER_PAGE) {
                         currentPage += 1;
@@ -52,7 +53,7 @@ class EventViewModel(private val eventRepo: EventRepo) : ViewModel() {
                 }
                 _eventsState.value = it
             }
-
+            _prevVillage.value = village
             _isLoading.value = false
         }
     }

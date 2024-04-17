@@ -34,7 +34,7 @@ exports.addContact = asyncerror(async(req, res, next) => {
 // })
 
 exports.getContact = asyncerror(async(req, res, next) => {
-    const {phoneNumber} = req.body;
+    const {phoneNumber} = req.query;
     if(!phoneNumber)
     {
         return next(new ErrorHandler("Phone number is required",400))

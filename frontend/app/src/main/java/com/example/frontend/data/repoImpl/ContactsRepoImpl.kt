@@ -23,9 +23,9 @@ class ContactsRepoImpl () : ContactsRepo {
         }
     }
 
-    override suspend fun getContact(body: phoneNumberClass): Flow<ApiResponse<*>> {
+    override suspend fun getContact(phoneNumber:String): Flow<ApiResponse<*>> {
         return flow {
-            val res = ApiCallHandler.handleApiCall { retrofitInstance.api.getContact(body) }
+            val res = ApiCallHandler.handleApiCall { retrofitInstance.api.getContact(phoneNumber) }
             emit(res)
         }
     }

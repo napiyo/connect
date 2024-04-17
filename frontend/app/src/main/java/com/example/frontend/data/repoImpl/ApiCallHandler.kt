@@ -1,6 +1,7 @@
 package com.example.frontend.data.repoImpl
 
 import com.example.frontend.data.model.ApiResponse
+import com.example.frontend.utils.saveToken
 import com.google.gson.Gson
 import java.io.IOException
 import java.net.ConnectException
@@ -27,6 +28,12 @@ object ApiCallHandler {
     private fun handleHttpException(e: retrofit2.HttpException): ApiResponse<String> {
         val errorBody = e.response()?.errorBody()?.string()
         val errorMessage = Gson().fromJson(errorBody, ApiResponse::class.java).data
+        val errorCode = e.code()
+        if(errorCode == 401)
+        {
+            // delete jwt token - if exist
+            saveToken("")
+        }
         return ApiResponse<String>(false,"HTTP error: $errorMessage")
     }
 

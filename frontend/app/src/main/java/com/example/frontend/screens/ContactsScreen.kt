@@ -61,6 +61,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -118,11 +119,13 @@ fun ContactsScreen(contactViewModel: ContactViewModel,contactViewModelForQuery:C
     val contacts by contactViewModel.contacts.collectAsState()
     val isLoading by contactViewModel.isLoading.collectAsState()
     val retryCount by contactViewModel.retryCount.collectAsState()
+    val prevVillage by contactViewModel.prevVillage.collectAsState()
 //    val contactViewModelForQuery = ContactViewModel(ContactsRepoImpl())
     val contactsStateForQuery by contactViewModelForQuery.searchContactsState.collectAsState()
     val contactsForQuery by contactViewModelForQuery.contacts.collectAsState()
     val isLoadingForQuery by contactViewModelForQuery.isLoading.collectAsState()
     val retryCountQuery by contactViewModelForQuery.retryCount.collectAsState()
+    val prevVillageQuery by contactViewModelForQuery.prevVillage.collectAsState()
     val villageSelected by navViewModal.village.collectAsState()
     val scope = rememberCoroutineScope()
 //    val showBottomSheet by remember { mutableStateOf(false) }
@@ -159,8 +162,12 @@ fun ContactsScreen(contactViewModel: ContactViewModel,contactViewModelForQuery:C
     }
     LaunchedEffect(villageSelected)
     {
+        if(prevVillage.lowercase() != villageSelected.lowercase()) {
             contactViewModel.clearContacts()
+        }
+        if(prevVillageQuery.lowercase() != villageSelected.lowercase()){
             contactViewModelForQuery.clearContacts()
+        }
     }
     var searchQuery by remember {
         mutableStateOf("")

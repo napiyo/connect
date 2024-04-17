@@ -102,7 +102,7 @@ fun FloatingActionButtonAppComponent(icon:ImageVector, iconDescription:String, i
             .imePadding()
     ) {
         if(isLoading){
-            CircularProgressIndicator()
+            CircularProgressIndicator(color = Color.White)
         }else{
             Icon(icon, contentDescription = iconDescription)
         }
@@ -236,8 +236,8 @@ fun VillageSelectionDropdown(navViewModal:NavViewModel) {
         .clickable {
             expanded = !expanded
         }
-        .widthIn(150.dp)
-        .background(Color.White)
+//        .widthIn(150.dp)
+//        .background(Color.White)
         .padding(end = 10.dp), horizontalAlignment = Alignment.End) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(40.dp), horizontalArrangement = Arrangement.End) {
             Icon(painter = painterResource(id = R.drawable.icons_viilage), contentDescription ="",tint= Color.Unspecified, modifier = Modifier.size(25.dp) )

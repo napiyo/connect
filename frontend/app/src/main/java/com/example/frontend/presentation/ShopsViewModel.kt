@@ -21,18 +21,21 @@ class ShopsViewModel(private val shopRepo: ShopRepo) : ViewModel(){
     val isLoading: StateFlow<Boolean> = _isLoading
     private val _retryCount = MutableStateFlow<Int>(0)
     val retryCount: StateFlow<Int> = _retryCount
-    fun getShops(village: String? = null) {
+
+    private val _prevVillage = MutableStateFlow<String>("all")
+    val prevVillage: StateFlow<String> = _prevVillage
+    fun getShops(village: String) {
         if(currentPage < 0) return
         _isLoading.value = true
         viewModelScope.launch {
-            var _village = if(village?.lowercase()=="all"){null}else{village}
+            var _village = if(village.lowercase()=="all"){null}else{village}
             shopRepo.getshops(_village,currentPage.toString()).collect {
 
                 if(it.success) {
                     val tempShops: List<Shop> = it.data as List<Shop>
                     if(tempShops.isNotEmpty())
                     {
-                        _shops.value += tempShops
+                        _shops.value = (_shops.value+tempShops).toSet().toList()
                     }
                     if(tempShops.size == configs.SEARCH_RESULTS_PER_PAGE)
                     {
@@ -50,7 +53,7 @@ class ShopsViewModel(private val shopRepo: ShopRepo) : ViewModel(){
                 }
                 _shopsState.value = it
             }
-
+            _prevVillage.value = village
             _isLoading.value = false
         }
     }

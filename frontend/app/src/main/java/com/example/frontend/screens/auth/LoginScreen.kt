@@ -20,6 +20,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,9 +28,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,6 +48,7 @@ import com.example.frontend.data.repoImpl.AuthRepoImpl
 import com.example.frontend.data.repoImpl.ContactsRepoImpl
 import com.example.frontend.presentation.AuthViewModel
 import com.example.frontend.presentation.ContactViewModel
+import com.example.frontend.presentation.NavViewModel
 import com.example.frontend.ui.theme.PoppinsFont
 
 
@@ -58,20 +62,35 @@ fun LoginScreen(navController: NavController) {
     var phoneNumberTF by remember {
         mutableStateOf("")
     }
-    if (sendOtpState.success) {
-        navController.navigate(Screens.OTPScreen.route + "/${phoneNumberTF}")
-    } else {
-        Log.e("narendar", "[in UI22]"+sendOtpState.toString())
+    var errmsg by remember {
+        mutableStateOf("")
     }
+    LaunchedEffect(sendOtpState){
+
+        if (sendOtpState.success) {
+            navController.navigate(Screens.OTPScreen.route + "/${phoneNumberTF}",
+                builder = {
+                    popUpTo(Screens.OTPScreen.route) { inclusive = true } // Set inclusive to true to also remove the destination itself
+                })
+        } else {
+            errmsg = sendOtpState.data.toString()
+        }
+    }
+
     Scaffold(
         modifier = Modifier
             .padding(10.dp)
             .background(colorResource(id = R.color.appBackground)),
         floatingActionButton = {
             FloatingActionButtonAppComponent(Icons.Filled.ArrowForward,"Next",isLoading){
-
+            if(phoneNumberTF.length != 10)
+            {
+                errmsg="phone number needs 10 digits"
+            }
+                else{
                 authViewModel.sendOtp(phoneNumberClass( phoneNumberTF))
-                Log.e("narendar", "[in UI]"+sendOtpState.toString())
+            }
+
 
             }
         },
@@ -94,7 +113,9 @@ fun LoginScreen(navController: NavController) {
 
                 HeadingAppComponent(heading = "Enter your Phone Number")
                 OutlinedTextField(value = phoneNumberTF, onValueChange = {
-                    phoneNumberTF = it.take(10) },
+                    phoneNumberTF = it.take(10)
+                    errmsg=""
+                                                 },
                     label = { Text(text = "Phone Number")},
                     singleLine = true,
                     keyboardOptions = KeyboardOptions( keyboardType = KeyboardType.Phone),
@@ -107,6 +128,7 @@ fun LoginScreen(navController: NavController) {
                     leadingIcon = { Icon(imageVector = Icons.Filled.Phone, contentDescription = "")},
                     enabled = !isLoading
                 )
+                Text(text = errmsg, fontSize = 12.sp, fontFamily = PoppinsFont, color = Color.Red,)
             }
         }
     }

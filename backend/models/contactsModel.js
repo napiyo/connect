@@ -34,6 +34,10 @@ const contactSchema = new mongoose.Schema({
     appUser:{
         type:Boolean,
         default:false,
+    },
+    role:{
+        type:String,
+        default:"user"
     }
 
 });

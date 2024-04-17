@@ -31,7 +31,7 @@ interface ApiClient {
 
     @GET("contacts/contact")
     suspend fun getContact(
-        @Body body: phoneNumberClass
+        @Query("phoneNumber") name:String?,
     ): ApiResponse<Contact>
     @POST("contacts/contact")
     suspend fun addContact(
@@ -67,6 +67,10 @@ interface ApiClient {
     @GET("configs/getConfig")
     suspend fun getServerConfig()
     : ApiResponse<ServerConfig>
+
+    @GET("configs/getVillages")
+    suspend fun getVillages()
+            : ApiResponse<List<String>>
 
 //  ******************  shops APIs  ***********************
     @GET("shops/shop")

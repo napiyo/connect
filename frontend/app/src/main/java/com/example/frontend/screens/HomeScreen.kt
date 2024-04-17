@@ -45,6 +45,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,6 +64,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -86,6 +91,8 @@ import com.example.frontend.ui.theme.Purple40
 import com.example.frontend.ui.theme.shopContactColor
 import com.example.frontend.ui.theme.shopContainerColor
 import com.example.frontend.utils.configs
+import com.example.frontend.utils.getToken
+import com.example.frontend.utils.saveToken
 
 @Composable
 fun HomeScreen(navViewModal:NavViewModel,shopViewModel:ShopsViewModel) {
@@ -94,6 +101,7 @@ fun HomeScreen(navViewModal:NavViewModel,shopViewModel:ShopsViewModel) {
     val isLoading by shopViewModel.isLoading.collectAsState()
     val retryCount by shopViewModel.retryCount.collectAsState()
     val villageSelected by navViewModal.village.collectAsState()
+    val prevVillage by shopViewModel.prevVillage.collectAsState()
 
     LaunchedEffect(shopState)
     {
@@ -109,11 +117,16 @@ fun HomeScreen(navViewModal:NavViewModel,shopViewModel:ShopsViewModel) {
             navViewModal.enqueueSnackbar("we couldn't fetch shops, please retry")
         }
     }
-
     LaunchedEffect(villageSelected)
     {
+       if(prevVillage.lowercase() != villageSelected.lowercase())
+       {
         shopViewModel.clearShops()
+       }
+
     }
+    val context = LocalContext.current
+
     Scaffold ()
     {
         if(it.toString() == ""){}
@@ -138,7 +151,7 @@ fun HomeScreen(navViewModal:NavViewModel,shopViewModel:ShopsViewModel) {
                     if(!isLoading &&  shops.lastIndex == index){
                         if(retryCount >= configs.MAX_RETRY)
                         {
-                            Text(text = "failed to get more contact", maxLines = 1, modifier = Modifier.padding(5.dp))
+                            Text(text = "failed to get more shops", maxLines = 1, modifier = Modifier.padding(5.dp))
                         }
                         else{
                             shopViewModel.getShops(village = villageSelected)
@@ -161,7 +174,6 @@ fun HomeScreenPreview() {
 @Composable
 fun ShopItem(navViewModal: NavViewModel,item:Shop) {
     if(item.shopName == "") return
-    Log.e("narendra",item.toString())
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { }
@@ -173,38 +185,34 @@ fun ShopItem(navViewModal: NavViewModel,item:Shop) {
                 .fillMaxWidth()
         ) {
             Row {
-//                Image(
-//                    painter = painterResource(id = R.drawable.shop_dummy)
-//                    , contentDescription = "",
-//                    Modifier
-//                        .height(150.dp)
-//                        .width(125.dp)
-//                        .clip(shape = RoundedCornerShape(5.dp, 0.dp, 0.dp, 5.dp)),
-//                    contentScale = ContentScale.Crop
-//                )
-//                AsyncImage(model = item.imageURL, contentDescription = "shop image",
-//                    Modifier
-//                        .height(150.dp)
-//                        .width(125.dp)
-//                        .clip(shape = RoundedCornerShape(5.dp, 0.dp, 0.dp, 5.dp)),
-//                    contentScale = ContentScale.Crop,
-//                    filterQuality = FilterQuality.Low,
-//
-//                    )
                 SubcomposeAsyncImage(
                     model = item.imageURL,
                     loading = {
-                        CircularProgressIndicator()
-                    },
+//                        CircularProgressIndicator(modifier = Modifier.size(35.dp))
+                        val transition = rememberInfiniteTransition(label = "")
+                        val shimmerTranslateAnimation by transition.animateFloat(
+                            initialValue = 0f,
+                            targetValue = 1000f,
+                            animationSpec = infiniteRepeatable(
+                                animation = tween(durationMillis = 1200, easing = LinearEasing),
+                                repeatMode = RepeatMode.Reverse
+                            ), label = ""
+                        )
+                        ShimmerPlaceholder(modifier = Modifier
+                            .width(125.dp)
+                            .height(150.dp), translateAnimation = shimmerTranslateAnimation)
+                              },
                     error = {
                         Icon(
                             painter = painterResource(id = R.drawable.icons_image),
-                            contentDescription = "failed image"
+                            contentDescription = "failed image",
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(30.dp)
                         )
                     },
                     contentDescription = "shop image",
-                    modifier =  Modifier
-                         .height(150.dp)
+                    modifier = Modifier
+                        .height(150.dp)
                         .width(125.dp)
                         .clip(shape = RoundedCornerShape(5.dp, 0.dp, 0.dp, 5.dp)),
                     alignment = Alignment.Center,
@@ -254,7 +262,7 @@ fun ShopItem(navViewModal: NavViewModel,item:Shop) {
                                 Text(
                                     text = item.address,
                                     modifier = Modifier
-                                        .padding(vertical = 5.dp),
+                                        .padding(5.dp),
                                     textAlign = TextAlign.Center,
                                     fontFamily = PoppinsFont,
                                     maxLines = 1,
@@ -400,7 +408,11 @@ fun ShimmerShopItem() {
 @Composable
 fun ShimmerPlaceholder(
     modifier: Modifier = Modifier,
-    colors: List<Color>,
+    colors: List<Color> =  listOf(
+    Color(0xFFBFDCF3), // Light color
+    Color(0xFF78ABD3), // Dark color
+    Color(0xFFB8D6EE)  // Light color again
+),
     translateAnimation: Float
 ) {
     Box(
